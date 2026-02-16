@@ -1,4 +1,15 @@
 # Smart Airport Ride Pooling Backend
+![Node.js](https://img.shields.io/badge/Node.js-18+-green)
+![TypeScript](https://img.shields.io/badge/TypeScript-Strict-blue)
+![PostgreSQL](https://img.shields.io/badge/PostgreSQL-Relational-blue)
+![Redis](https://img.shields.io/badge/Redis-DistributedLock-red)
+![Prisma](https://img.shields.io/badge/ORM-Prisma-black)
+![Express](https://img.shields.io/badge/Framework-Express-lightgrey)
+![Concurrency Safe](https://img.shields.io/badge/Concurrency-Redis%20Lock-success)
+![Latency](https://img.shields.io/badge/Latency-<300ms-brightgreen)
+![Throughput](https://img.shields.io/badge/Throughput-100%20RPS-blue)
+![Scalability](https://img.shields.io/badge/Scalable-10k%20Users-orange)
+![License](https://img.shields.io/badge/License-MIT-lightgrey)
 
 ## Table of Contents
 - [0. Executive Summary](#0-executive-summary)
@@ -158,20 +169,6 @@
   - [15.4 Observability](#154-observability)
   - [15.5 Scalability](#155-scalability)
 - [16. Submission Checklist](#16-submission-checklist)
-
-
-
-![Node.js](https://img.shields.io/badge/Node.js-18+-green)
-![TypeScript](https://img.shields.io/badge/TypeScript-Strict-blue)
-![PostgreSQL](https://img.shields.io/badge/PostgreSQL-Relational-blue)
-![Redis](https://img.shields.io/badge/Redis-DistributedLock-red)
-![Prisma](https://img.shields.io/badge/ORM-Prisma-black)
-![Express](https://img.shields.io/badge/Framework-Express-lightgrey)
-![Concurrency Safe](https://img.shields.io/badge/Concurrency-Redis%20Lock-success)
-![Latency](https://img.shields.io/badge/Latency-<300ms-brightgreen)
-![Throughput](https://img.shields.io/badge/Throughput-100%20RPS-blue)
-![Scalability](https://img.shields.io/badge/Scalable-10k%20Users-orange)
-![License](https://img.shields.io/badge/License-MIT-lightgrey)
 
 ---
 
