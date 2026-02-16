@@ -1,0 +1,228 @@
+{
+  "info": {
+    "name": "Airport Cab Pooling System API",
+    "description": "API collection for testing the airport cab pooling system",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Health Check",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:3000/health",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "3000",
+          "path": ["health"]
+        }
+      }
+    },
+    {
+      "name": "Create Ride Request",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"passengerId\": \"123e4567-e89b-12d3-a456-426614174000\",\n  \"pickupLocation\": {\n    \"lat\": 40.7589,\n    \"lng\": -73.9851\n  },\n  \"departureTime\": \"2024-01-15T15:00:00Z\",\n  \"seatRequirement\": 1,\n  \"luggageAmount\": 1,\n  \"maxDetourTolerance\": 20\n}"
+        },
+        "url": {
+          "raw": "http://localhost:3000/api/v1/ride-requests",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "3000",
+          "path": ["api", "v1", "ride-requests"]
+        },
+        "description": "Create a new ride request for airport pickup"
+      }
+    },
+    {
+      "name": "Create Ride Request - Passenger 2",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"passengerId\": \"223e4567-e89b-12d3-a456-426614174001\",\n  \"pickupLocation\": {\n    \"lat\": 40.7614,\n    \"lng\": -73.9776\n  },\n  \"departureTime\": \"2024-01-15T15:05:00Z\",\n  \"seatRequirement\": 2,\n  \"luggageAmount\": 1,\n  \"maxDetourTolerance\": 15\n}"
+        },
+        "url": {
+          "raw": "http://localhost:3000/api/v1/ride-requests",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "3000",
+          "path": ["api", "v1", "ride-requests"]
+        },
+        "description": "Create a second ride request for testing group matching"
+      }
+    },
+    {
+      "name": "Create Ride Request - Passenger 3",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"passengerId\": \"323e4567-e89b-12d3-a456-426614174002\",\n  \"pickupLocation\": {\n    \"lat\": 40.7505,\n    \"lng\": -73.9934\n  },\n  \"departureTime\": \"2024-01-15T14:55:00Z\",\n  \"seatRequirement\": 1,\n  \"luggageAmount\": 2,\n  \"maxDetourTolerance\": 25\n}"
+        },
+        "url": {
+          "raw": "http://localhost:3000/api/v1/ride-requests",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "3000",
+          "path": ["api", "v1", "ride-requests"]
+        },
+        "description": "Create a third ride request for testing group matching"
+      }
+    },
+    {
+      "name": "Trigger Group Matching",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:3000/api/v1/ride-requests/{{requestId}}/group",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "3000",
+          "path": ["api", "v1", "ride-requests", "{{requestId}}", "group"]
+        },
+        "description": "Trigger matching algorithm to find compatible passengers for a ride request"
+      }
+    },
+    {
+      "name": "Cancel Ride Request",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:3000/api/v1/ride-requests/{{requestId}}/cancel",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "3000",
+          "path": ["api", "v1", "ride-requests", "{{requestId}}", "cancel"]
+        },
+        "description": "Cancel an existing ride request and trigger regrouping"
+      }
+    },
+    {
+      "name": "Calculate Price - Solo Ride",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"distance\": 15,\n  \"duration\": 25,\n  \"passengers\": 1,\n  \"demand\": 1.0\n}"
+        },
+        "url": {
+          "raw": "http://localhost:3000/api/v1/pricing/calculate",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "3000",
+          "path": ["api", "v1", "pricing", "calculate"]
+        },
+        "description": "Calculate price for a solo ride (no pooling discount)"
+      }
+    },
+    {
+      "name": "Calculate Price - Pooled Ride (2 passengers)",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"distance\": 15,\n  \"duration\": 25,\n  \"passengers\": 2,\n  \"demand\": 1.0\n}"
+        },
+        "url": {
+          "raw": "http://localhost:3000/api/v1/pricing/calculate",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "3000",
+          "path": ["api", "v1", "pricing", "calculate"]
+        },
+        "description": "Calculate price for a pooled ride with 2 passengers (20% discount)"
+      }
+    },
+    {
+      "name": "Calculate Price - Pooled Ride (3 passengers)",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"distance\": 15,\n  \"duration\": 25,\n  \"passengers\": 3,\n  \"demand\": 1.0\n}"
+        },
+        "url": {
+          "raw": "http://localhost:3000/api/v1/pricing/calculate",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "3000",
+          "path": ["api", "v1", "pricing", "calculate"]
+        },
+        "description": "Calculate price for a pooled ride with 3 passengers (30% discount)"
+      }
+    },
+    {
+      "name": "Calculate Price - High Demand",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"distance\": 15,\n  \"duration\": 25,\n  \"passengers\": 2,\n  \"demand\": 1.5\n}"
+        },
+        "url": {
+          "raw": "http://localhost:3000/api/v1/pricing/calculate",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "3000",
+          "path": ["api", "v1", "pricing", "calculate"]
+        },
+        "description": "Calculate price with high demand factor (1.5x surge pricing)"
+      }
+    }
+  ],
+  "variable": [
+    {
+      "key": "requestId",
+      "value": "replace-with-actual-request-id",
+      "description": "Ride request ID from create request response"
+    }
+  ]
+}

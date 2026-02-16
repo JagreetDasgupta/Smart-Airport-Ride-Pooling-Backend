@@ -1,0 +1,128 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Passenger {
+  id           String        @id @default(uuid())
+  name         String
+  contactInfo  String        @map("contact_info")
+  createdAt    DateTime      @default(now()) @map("created_at")
+  rideRequests RideRequest[]
+
+  @@map("passengers")
+}
+
+model RideRequest {
+  id                 String          @id @default(uuid())
+  passengerId        String          @map("passenger_id")
+  pickupLocation     Json            @map("pickup_location")
+  departureTime      DateTime        @map("departure_time")
+  seatRequirement    Int             @map("seat_requirement")
+  luggageAmount      Int             @map("luggage_amount")
+  maxDetourTolerance Int             @map("max_detour_tolerance")
+  status             RequestStatus   @default(PENDING)
+  createdAt          DateTime        @default(now()) @map("created_at")
+  groupId            String?         @map("group_id")
+  cancellations      Cancellation[]
+  passengerGroup     PassengerGroup? @relation(fields: [groupId], references: [id])
+  passenger          Passenger       @relation(fields: [passengerId], references: [id])
+
+  @@index([status, departureTime])
+  @@index([groupId])
+  @@map("ride_requests")
+}
+
+model PassengerGroup {
+  id              String         @id @default(uuid())
+  totalPassengers Int            @map("total_passengers")
+  totalSeats      Int            @map("total_seats")
+  totalLuggage    Int            @map("total_luggage")
+  status          GroupStatus    @default(FORMING)
+  createdAt       DateTime       @default(now()) @map("created_at")
+  routeId         String?        @unique @map("route_id")
+  cabAssignment   CabAssignment?
+  route           Route?         @relation(fields: [routeId], references: [id])
+  rideRequests    RideRequest[]
+
+  @@index([status])
+  @@map("passenger_groups")
+}
+
+model Cab {
+  id              String          @id @default(uuid())
+  cabType         CabType         @map("cab_type")
+  maxCapacity     Int             @map("max_capacity")
+  maxLuggage      Int             @map("max_luggage")
+  status          CabStatus       @default(AVAILABLE)
+  currentLocation Json            @map("current_location")
+  assignments     CabAssignment[]
+
+  @@index([status])
+  @@map("cabs")
+}
+
+model CabAssignment {
+  id          String         @id @default(uuid())
+  cabId       String         @map("cab_id")
+  groupId     String         @unique @map("group_id")
+  assignedAt  DateTime       @default(now()) @map("assigned_at")
+  completedAt DateTime?      @map("completed_at")
+  cab         Cab            @relation(fields: [cabId], references: [id])
+  group       PassengerGroup @relation(fields: [groupId], references: [id])
+
+  @@index([cabId])
+  @@map("cab_assignments")
+}
+
+model Route {
+  id                String          @id @default(uuid())
+  waypointOrder     Json            @map("waypoint_order")
+  totalDistance     Float           @map("total_distance")
+  estimatedDuration Int             @map("estimated_duration")
+  detourAnalysis    Json            @map("detour_analysis")
+  group             PassengerGroup?
+
+  @@map("routes")
+}
+
+model Cancellation {
+  id             String      @id @default(uuid())
+  requestId      String      @map("request_id")
+  cancelledAt    DateTime    @default(now()) @map("cancelled_at")
+  reason         String?
+  impactAnalysis Json?       @map("impact_analysis")
+  rideRequest    RideRequest @relation(fields: [requestId], references: [id])
+
+  @@map("cancellations")
+}
+
+enum RequestStatus {
+  PENDING
+  MATCHED
+  CANCELLED
+  COMPLETED
+}
+
+enum GroupStatus {
+  FORMING
+  LOCKED
+  IN_PROGRESS
+  COMPLETED
+}
+
+enum CabType {
+  SEDAN
+  SUV
+  VAN
+}
+
+enum CabStatus {
+  AVAILABLE
+  BUSY
+  OFF_DUTY
+}
